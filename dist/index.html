@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge, chrome=1" />
+        <title>TMAP</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <canvas id="tmapCanvas"></canvas>
+        <div id="hover-indicator" data-tmap="hoverIndicator"></div>
+        <div id="controls">
+            <button onclick="tmap.setZoom(2.0)">setZoom(2.0)</button>
+            <button onclick="tmap.setZoom(0.5)">setZoom(0.5)</button>
+            <button onclick="tmap.resetZoom()">resetZoom()</button>
+            <button onclick="tmap.snapshot()">snapshot()</button>
+        </div>
+        <script src="tmap.js"></script>
+        <script src="main.js"></script>
+    </body>
+</html>

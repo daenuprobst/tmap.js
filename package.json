@@ -1,0 +1,27 @@
+{
+  "name": "tmap",
+  "version": "1.0.0",
+  "description": "A JavaScript API to load and display TMAPs in the browser.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daenuprobst/tmap.js.git"
+  },
+  "keywords": [
+    "TMAP",
+    "visualization",
+    "scientific"
+  ],
+  "author": "Daniel Probst",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/daenuprobst/tmap.js/issues"
+  },
+  "homepage": "https://github.com/daenuprobst/tmap.js#readme",
+  "dependencies": {
+    "lore-engine": "^1.1.10"
+  }
+}
