@@ -104,6 +104,10 @@ class TMAP {
     onVertexOver(callback) {
         this.faerun.onVertexOver(callback);
     }
+
+    onVertexOut(callback) {
+        this.faerun.onVertexOut(callback);
+    }
 }
 
 module.exports = TMAP

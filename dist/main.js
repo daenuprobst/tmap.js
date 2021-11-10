@@ -30,9 +30,13 @@ tmap = new TMAP(
 );
 
 tmap.onVertexOver(e => {
-    console.log(e)
+    console.log(e);
+});
+
+tmap.onVertexOut(() => {
+    console.log("No vertex hovered.");
 });
 
 tmap.onVertexClick(e => {
-    console.log(e)
-})
+    console.log(e);
+});

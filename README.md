@@ -41,15 +41,17 @@ The TMAP will be drawn upon initialization.
 
 #### Callbacks
 
-TMAP has two methods accepting callbacks, `onNodeOver` and `onNodeClick`. Both take a (callback) function as an argument. An example of the object supplied to the callback passed to `onNodeOver` is: 
+TMAP has three methods accepting callbacks, `onVertexOver`, `onVertexClick`, and `onVertexOut`. All three take a (callback) function as an argument. An example of the object supplied to the callback passed to `onVertexOver` is: 
 ```javascript
 { x: 315.2, y: 584, index: 0 }
 ```
-The `onNodeClick` object contains information about the node color in addition to the on screen coordinates and the index:
+The `onVertexClick` object contains information about the node color in addition to the on screen coordinates and the index:
 ```javascript
 { x: 315.2, y: 584, index: 0, color: [ 255, 0, 0 ] }
 ```
 In both cases, `x` and `y` are the vertex's 3D coordinates projected to screen space and `index` is the array index of the vertex.
+
+In addition, there is the `onVertexOut` callback, which does not supply an object to the callback function and is called when the mouse exits any hovered vertex.
 
 ### Methods
 
@@ -70,6 +72,7 @@ This methods takes a screenshot of the canvas and begins the download process in
 ### Example
 See an example below (can also be found in `dist`)
 ```javascript
+
 const vertexCoordinates = {
     x: [0, 100],
     y: [0, 100],
@@ -88,18 +91,27 @@ const colors = {
     b: [0, 255]
 };
 
+const labels = [
+    "A1", "B2"
+];
+
 tmap = new TMAP(
     "tmapCanvas",
     vertexCoordinates,
     edgeCoordinates,
-    colors
+    colors,
+    null
 );
 
 tmap.onVertexOver(e => {
-    console.log(e)
+    console.log(e);
+});
+
+tmap.onVertexOut(() => {
+    console.log("No vertex hovered.");
 });
 
 tmap.onVertexClick(e => {
-    console.log(e)
-})
+    console.log(e);
+});
 ```

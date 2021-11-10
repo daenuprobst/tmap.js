@@ -11916,6 +11916,7 @@ class Faerun {
 
         this.onVertexClickCallback = null;
         this.onVertexOverCallback = null;
+        this.onVertexOutCallback = null;
     }
 
     setZoom(zoom) {
@@ -11936,6 +11937,10 @@ class Faerun {
 
     onVertexOver(callback) {
         this.onVertexOverCallback = callback;
+    }
+
+    onVertexOut(callback) {
+        this.onVertexOutCallback = callback;
     }
 
     snapshot(size = 2) {
@@ -12137,6 +12142,9 @@ class Faerun {
                 if (this.el.hoverIndicator) {
                     this.el.hoverIndicator.classList.remove('show');
                 }
+
+                if (this.onVertexOutCallback)
+                    this.onVertexOutCallback();
             }
         });
         Lore.Helpers.OctreeHelper.joinSelectedChanged(this.octreeHelpers, items => {
@@ -12698,6 +12706,10 @@ class TMAP {
 
     onVertexOver(callback) {
         this.faerun.onVertexOver(callback);
+    }
+
+    onVertexOut(callback) {
+        this.faerun.onVertexOut(callback);
     }
 }
 
