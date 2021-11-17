@@ -306,7 +306,9 @@ class Faerun {
                 }
 
                 if (this.onVertexOverCallback)
-                    this.onVertexOverCallback({x: x, y: y, index: e.e.index});
+                    this.onVertexOverCallback({
+                        x: x, y: y, index: e.e.index, 
+                        color: [rgbColor[0], rgbColor[1], rgbColor[2]]});
             } else {
                 this.currentPoint = null;
 

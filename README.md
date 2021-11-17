@@ -44,13 +44,13 @@ The TMAP will be drawn upon initialization.
 
 TMAP has three methods accepting callbacks, `onVertexOver`, `onVertexClick`, and `onVertexOut`. All three take a (callback) function as an argument. An example of the object supplied to the callback passed to `onVertexOver` is: 
 ```javascript
-{ x: 315.2, y: 584, index: 0 }
+{ x: 315.2, y: 584, index: 0, color: [ 255, 0, 0 ] }
 ```
-The `onVertexClick` object contains information about the node color in addition to the on screen coordinates and the index:
+The `onVertexClick` object contains the same information:
 ```javascript
 { x: 315.2, y: 584, index: 0, color: [ 255, 0, 0 ] }
 ```
-In both cases, `x` and `y` are the vertex's 3D coordinates projected to screen space and `index` is the array index of the vertex.
+In both cases, `x` and `y` are the vertex's 3D coordinates projected to screen space and `index` is the array index of the vertex, and `color` is an rgb array (0-255).
 
 In addition, there is the `onVertexOut` callback, which does not supply an object to the callback function and is called when the mouse exits any hovered vertex.
 
