@@ -7,10 +7,10 @@ class Faerun {
         treeMeta = [],
         data = [],
         clearColorHex = "#222222",
+        hasLegend = true,
         antiAliasing = true,
         alphaBlending = false,
         thumbnailWidth = 250,
-        hasLegend = true,
         legendTitle = "TMAP",
         coords = {
             show: false,
@@ -101,6 +101,18 @@ class Faerun {
     onVertexOut(callback) {
         this.onVertexOutCallback = callback;
     }
+
+    // selectVertex(index, octreeHelperIndex = 0) {
+    //     this.octreeHelpers[octreeHelperIndex].addSelected(index);
+    // }
+
+    // deselectVertex(index, octreeHelperIndex = 0) {
+    //     this.octreeHelpers[octreeHelperIndex].removeSelected(index);
+    // }
+
+    // deselectAllVertices(octreeHelperIndex = 0) {
+    //     this.octreeHelpers[octreeHelperIndex].clearSelected();
+    // }
 
     snapshot(size = 2) {
         let canvas = document.getElementById(this.canvasId);

@@ -35,6 +35,7 @@ let tmap = TMAP(
     treeColor = "#4a69bd", // The color of the tree lines
     maxPointSize = 20, // The maximum size of points when zooming in
     pointScale = 5 // The base-size of the points
+    hasLegend = false // Whether or not to render the built-in legend
 )
 ```
 The TMAP will be drawn upon initialization.

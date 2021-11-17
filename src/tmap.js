@@ -10,14 +10,15 @@ class TMAP {
         backgroundColor = "#222222",
         treeColor = "#4a69bd",
         maxPointSize = 20,
-        pointScale = 5
+        pointScale = 5,
+        hasLegend = false,
     ) {
         this.canvasId = canvasId;
         
         this.scatterMeta = [{
             "categorical": [true],
             "fog_intensity": 0.0,
-            "has_legend": false,
+            "has_legend": hasLegend,
             "interactive": true,
             "is_range": [false],
             "label_index": [0],
@@ -82,7 +83,10 @@ class TMAP {
             }
         }
 
-        this.faerun = new Faerun(canvasId, this.scatterMeta, this.treeMeta, data, backgroundColor);
+        this.faerun = new Faerun(
+            canvasId, this.scatterMeta, this.treeMeta, 
+            data, backgroundColor, hasLegend
+        );
     }
 
     setZoom(zoom) {
@@ -94,7 +98,19 @@ class TMAP {
     }
 
     snapshot(size = 2.0) {
-        this.faerun.snapshot(size)
+        this.faerun.snapshot(size);
+    }
+
+    selectVertex(index) {
+        this.faerun.selectVertex(index);
+    }
+
+    deselectVertex(index) {
+        this.faerun.deselectVertex(index);
+    }
+
+    deselectAllVertices() {
+        this.faerun.deselectAllVertices();
     }
 
     onVertexClick(callback) {
