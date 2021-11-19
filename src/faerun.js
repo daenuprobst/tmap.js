@@ -112,6 +112,7 @@ class Faerun {
 
     deselectAllVertices(octreeHelperIndex = 0) {
         this.octreeHelpers[octreeHelperIndex].clearSelected();
+        this.selectedItems = []
     }
 
     setVertexColor(index, color, pointHelperIndex = 0) {
@@ -566,6 +567,7 @@ class Faerun {
         return selectedIndex;
     }
     updateSelected(current = -1) {
+        console.log(this.selectedItems)
         let n = this.selectedItems.length
         // Hide the container if no items are selected
         if (this.el.selected) {
