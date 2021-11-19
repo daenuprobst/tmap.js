@@ -13,6 +13,8 @@ class TMAP {
         pointScale = 5,
         hasLegend = false,
     ) {
+        this.originalVertexColors = {};
+
         this.canvasId = canvasId;
         
         this.scatterMeta = [{
@@ -99,6 +101,26 @@ class TMAP {
 
     snapshot(size = 2.0) {
         this.faerun.snapshot(size);
+    }
+
+    setVertexColor(index, color, backup = true) {
+        if (backup && !this.originalVertexColors.hasOwnProperty(index)) {
+            this.originalVertexColors[index] = this.faerun.getVertexColor(index);
+        }
+
+        this.faerun.setVertexColor(index, color);
+    }
+
+    resetVertexColors() {
+        for (let key in this.originalVertexColors) {
+            this.setVertexColor(
+                key,
+                this.originalVertexColors[key],
+                false
+            );
+        }
+
+        this.originalVertexColors = {};
     }
 
     selectVertex(index) {

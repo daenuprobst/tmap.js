@@ -102,17 +102,32 @@ class Faerun {
         this.onVertexOutCallback = callback;
     }
 
-    // selectVertex(index, octreeHelperIndex = 0) {
-    //     this.octreeHelpers[octreeHelperIndex].addSelected(index);
-    // }
+    selectVertex(index, octreeHelperIndex = 0) {
+        this.octreeHelpers[octreeHelperIndex].addSelected(index);
+    }
 
-    // deselectVertex(index, octreeHelperIndex = 0) {
-    //     this.octreeHelpers[octreeHelperIndex].removeSelected(index);
-    // }
+    deselectVertex(index, octreeHelperIndex = 0) {
+        this.octreeHelpers[octreeHelperIndex].removeSelected(index);
+    }
 
-    // deselectAllVertices(octreeHelperIndex = 0) {
-    //     this.octreeHelpers[octreeHelperIndex].clearSelected();
-    // }
+    deselectAllVertices(octreeHelperIndex = 0) {
+        this.octreeHelpers[octreeHelperIndex].clearSelected();
+    }
+
+    setVertexColor(index, color, pointHelperIndex = 0) {
+        this.pointHelpers[pointHelperIndex].setColor(
+            index,
+            new Lore.Core.Color(
+                color[0] / 255,
+                color[1] / 255,
+                color[2] / 255
+            )
+        );
+    }
+
+    getVertexColor(index, pointHelperIndex = 0) {
+        return this.pointHelpers[pointHelperIndex].getColor(index);
+    }
 
     snapshot(size = 2) {
         let canvas = document.getElementById(this.canvasId);

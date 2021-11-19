@@ -69,6 +69,26 @@ Analogous to `setZoom(1.0)`.
 snapshot(size = 2.0)
 ```
 This methods takes a screenshot of the canvas and begins the download process in the browser. It takes an argument (`size`) which scales the canvas before the it's buffer is copied to a png to enable higher-resolution screenshots. The default value is `2.0`. Higher values may crash browser tabs.
+```javascript
+selectVertex(index)
+```
+Select the vertex with index `index`.
+```javascript
+deselectVertex(index)
+```
+Deselect the vertex with index `index`.
+```javascript
+deselectAllVertices()
+```
+Deselects all currently selected vertices.
+```javascript
+setVertexColor(index, color)
+```
+Sets the vertex with index `index` to `color` where `color` is an array of rgb colours (`0`-`255`).
+```javascript
+resetVertexColors()
+```
+Resets all color values to their originals.
 
 ### Example
 See an example below (can also be found in `dist`)

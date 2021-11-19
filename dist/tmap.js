@@ -11943,17 +11943,32 @@ class Faerun {
         this.onVertexOutCallback = callback;
     }
 
-    // selectVertex(index, octreeHelperIndex = 0) {
-    //     this.octreeHelpers[octreeHelperIndex].addSelected(index);
-    // }
+    selectVertex(index, octreeHelperIndex = 0) {
+        this.octreeHelpers[octreeHelperIndex].addSelected(index);
+    }
 
-    // deselectVertex(index, octreeHelperIndex = 0) {
-    //     this.octreeHelpers[octreeHelperIndex].removeSelected(index);
-    // }
+    deselectVertex(index, octreeHelperIndex = 0) {
+        this.octreeHelpers[octreeHelperIndex].removeSelected(index);
+    }
 
-    // deselectAllVertices(octreeHelperIndex = 0) {
-    //     this.octreeHelpers[octreeHelperIndex].clearSelected();
-    // }
+    deselectAllVertices(octreeHelperIndex = 0) {
+        this.octreeHelpers[octreeHelperIndex].clearSelected();
+    }
+
+    setVertexColor(index, color, pointHelperIndex = 0) {
+        this.pointHelpers[pointHelperIndex].setColor(
+            index,
+            new Lore.Core.Color(
+                color[0] / 255,
+                color[1] / 255,
+                color[2] / 255
+            )
+        );
+    }
+
+    getVertexColor(index, pointHelperIndex = 0) {
+        return this.pointHelpers[pointHelperIndex].getColor(index);
+    }
 
     snapshot(size = 2) {
         let canvas = document.getElementById(this.canvasId);
@@ -12630,6 +12645,8 @@ class TMAP {
         pointScale = 5,
         hasLegend = false,
     ) {
+        this.originalVertexColors = {};
+
         this.canvasId = canvasId;
         
         this.scatterMeta = [{
@@ -12716,6 +12733,26 @@ class TMAP {
 
     snapshot(size = 2.0) {
         this.faerun.snapshot(size);
+    }
+
+    setVertexColor(index, color, backup = true) {
+        if (backup && !this.originalVertexColors.hasOwnProperty(index)) {
+            this.originalVertexColors[index] = this.faerun.getVertexColor(index);
+        }
+
+        this.faerun.setVertexColor(index, color);
+    }
+
+    resetVertexColors() {
+        for (let key in this.originalVertexColors) {
+            this.setVertexColor(
+                key,
+                this.originalVertexColors[key],
+                false
+            );
+        }
+
+        this.originalVertexColors = {};
     }
 
     selectVertex(index) {
