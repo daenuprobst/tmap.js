@@ -11889,6 +11889,7 @@ class Faerun {
         this.coordinatesHelper = null;
         this.ohIndexToPhName = [];
         this.ohIndexToPhIndex = [];
+        this.phIndexToOhIndex = {};
         this.phIndexMap = {};
         this.ohIndexMap = {};
         this.min = [Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE];
@@ -11917,6 +11918,7 @@ class Faerun {
         this.onVertexClickCallback = null;
         this.onVertexOverCallback = null;
         this.onVertexOutCallback = null;
+        this.watchedVertices = {};
     }
 
     setZoom(zoom) {
@@ -11971,6 +11973,23 @@ class Faerun {
         return this.pointHelpers[pointHelperIndex].getColor(index);
     }
 
+    watchVertices(name, indices, callback, pointHelperIndex = 0) {
+        if (!this.watchedVertices.hasOwnProperty(pointHelperIndex))
+            this.watchedVertices[pointHelperIndex] = {};
+
+        this.watchedVertices[pointHelperIndex][name] = {
+            indices: indices,
+            callback: callback
+        };
+    }
+
+    unwatchVertices(name, pointHelperIndex = 0) {
+        if (!this.watchedVertices.hasOwnProperty(pointHelperIndex))
+            return
+        
+        delete this.watchedVertices[pointHelperIndex][name];
+    }
+
     snapshot(size = 2) {
         let canvas = document.getElementById(this.canvasId);
         let zoom = this.lore.controls.getZoom();
@@ -12016,14 +12035,18 @@ class Faerun {
             let ph = new Lore.Helpers.PointHelper(
                 this.lore, s.name, s.shader, { maxPointSize: s.max_point_size }
             );
+            
+            let phIndex = this.pointHelpers.length;
+
             ph.setXYZRGBS(this.data[s.name].x, this.data[s.name].y, this.data[s.name].z,
                 this.data[s.name]['colors'][0].r, this.data[s.name]['colors'][0].g,
                 this.data[s.name]['colors'][0].b, this.data[s.name]['s'] ? this.data[s.name]['s'][0] : 1.0);
             ph.setPointScale(s.point_scale);
             ph.setFog([this.clearColor.components[0], this.clearColor.components[1],
-            this.clearColor.components[2], this.clearColor.components[3]],
+                this.clearColor.components[2], this.clearColor.components[3]],
                 s.fog_intensity)
-            this.phIndexMap[s.name] = this.pointHelpers.length;
+            
+            this.phIndexMap[s.name] = phIndex;
             this.pointHelpers.push(ph);
             this.min[0] = Faerun.getMin(this.data[s.name].x, this.min[0]);
             this.min[1] = Faerun.getMin(this.data[s.name].y, this.min[1]);
@@ -12037,9 +12060,12 @@ class Faerun {
                 this.octreeHelpers.push(
                     new Lore.Helpers.OctreeHelper(this.lore, 'Octree_' + s.name, 'tree', ph)
                 );
-                this.ohIndexMap[s.name] = this.octreeHelpers.length - 1;
+
+                let ohIndex = this.octreeHelpers.length - 1;
+                this.ohIndexMap[s.name] = ohIndex;
                 this.ohIndexToPhName.push(s.name);
                 this.ohIndexToPhIndex.push(this.phIndexMap[s.name]);
+                this.phIndexToOhIndex[phIndex] = ohIndex;
             }
         });
     }
@@ -12126,6 +12152,7 @@ class Faerun {
             this.updateYAxis();
             this.updateXAxis();
             this.updateSelectedIndicators();
+            this.updateWatchedVertices();
         });
         Lore.Helpers.OctreeHelper.joinHoveredChanged(this.octreeHelpers, e => {
             let phName = this.ohIndexToPhName[e.source];
@@ -12473,6 +12500,37 @@ class Faerun {
             indicator.element.style.height = pointSize + 'px';
         });
     }
+
+    updateWatchedVertices() {
+        for (let pointHelperIndex in this.watchedVertices) {
+            let pointSize = this.pointHelpers[pointHelperIndex].getPointSize();
+            let ohIndex = this.phIndexToOhIndex[pointHelperIndex];
+
+            for (let name in this.watchedVertices[pointHelperIndex]) {
+                let watcher = this.watchedVertices[pointHelperIndex][name];
+
+                let callbackData = [];
+                
+                for (let j = 0; j < watcher.indices.length; j++) {
+                    let vertex = watcher.indices[j];
+                    let screenPosition = this.octreeHelpers[ohIndex]
+                        .getScreenPosition(vertex);
+
+                    callbackData.push({ 
+                        x: screenPosition[0],
+                        y: screenPosition[1],
+                        index: vertex,
+                        color: this.getVertexColor(vertex, pointHelperIndex)
+                    });
+                }
+                
+                if (watcher.callback) {
+                    watcher.callback(callbackData);
+                }
+            }
+        }
+    }
+
     updateTitle(first = false) {
         if (this.el.title === undefined) return;
         let bb = this.el.title.getBoundingClientRect();
@@ -12779,6 +12837,14 @@ class TMAP {
 
     onVertexOut(callback) {
         this.faerun.onVertexOut(callback);
+    }
+
+    addWatcher(name, indices, callback) {
+        this.faerun.watchVertices(name, indices, callback);
+    }
+
+    removeWatcher(name) {
+        this.faerun.unwatchVertices(name);
     }
 }
 

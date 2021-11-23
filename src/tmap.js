@@ -146,6 +146,14 @@ class TMAP {
     onVertexOut(callback) {
         this.faerun.onVertexOut(callback);
     }
+
+    addWatcher(name, indices, callback) {
+        this.faerun.watchVertices(name, indices, callback);
+    }
+
+    removeWatcher(name) {
+        this.faerun.unwatchVertices(name);
+    }
 }
 
 module.exports = TMAP

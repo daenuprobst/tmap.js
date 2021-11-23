@@ -40,3 +40,7 @@ tmap.onVertexOut(() => {
 tmap.onVertexClick(e => {
     console.log(e);
 });
+
+tmap.addWatcher("test", [0, 1], e => {
+    console.log(e);
+});

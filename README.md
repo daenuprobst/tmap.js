@@ -89,6 +89,14 @@ Sets the vertex with index `index` to `color` where `color` is an array of rgb c
 resetVertexColors()
 ```
 Resets all color values to their originals.
+```javascript
+addWatcher(name, indices, callback)
+```
+Callback receives an array of screen positions, indices and colours (e.g. `[{ x: 315.2, y: 584, index: 0, color: [ 255, 0, 0 ] }, ...]`) when the position of the vertices changes. `name` is an arbitrary name for this watcher and `indices` is an array containing the indices of the vertices to be watched.
+```javascript
+removeWatcher(name)
+```
+Remove the watcher with name `name`.
 
 ### Example
 See an example below (can also be found in `dist`)
