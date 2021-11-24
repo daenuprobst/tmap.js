@@ -370,7 +370,7 @@ class Faerun {
             this.selectedItems = items;
             this.updateSelected();
 
-            if (this.onVertexClickCallback) {
+            if (this.onVertexClickCallback && items.length > 0) {
                 let lastItem = items[items.length - 1].item;
 
                 this.onVertexClickCallback({
@@ -597,7 +597,6 @@ class Faerun {
         return selectedIndex;
     }
     updateSelected(current = -1) {
-        console.log(this.selectedItems)
         let n = this.selectedItems.length
         // Hide the container if no items are selected
         if (this.el.selected) {
@@ -610,6 +609,18 @@ class Faerun {
         }
         if (current < 0) current = n - 1;
         if (current >= n) current = 0;
+
+        // Remove all indicators
+        this.selectedIndicators.forEach(indicator => {
+            indicator.element.parentElement.removeChild(indicator.element);
+        });
+
+        this.selectedIndicators.length = 0;
+
+        if (this.selectedItems.length == 0) {
+            return;
+        }
+
         this.selectedCurrent = current;
         let item = this.selectedItems[current];
         let phIndex = this.ohIndexToPhIndex[item.source];
@@ -622,12 +633,8 @@ class Faerun {
         let labelIndex = meta.label_index[seriesState];
         let titleIndex = meta.title_index[seriesState];
         let selectedLabels = meta.selected_labels[seriesState];
-
-        // Remove all indicators
-        this.selectedIndicators.forEach(indicator => {
-            indicator.element.parentElement.removeChild(indicator.element);
-        });
-        this.selectedIndicators.length = 0;
+        
+        
         // Add the indicator for this object
         let indicatorElement = Faerun.createElement(
             'div',

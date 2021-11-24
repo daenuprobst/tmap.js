@@ -73,14 +73,14 @@ This methods takes a screenshot of the canvas and begins the download process in
 selectVertex(index)
 ```
 Select the vertex with index `index`.
-<!--```javascript
+```javascript
 deselectVertex(index)
 ```
 Deselect the vertex with index `index`.
 ```javascript
 deselectAllVertices()
 ```
-Deselects all currently selected vertices. -->
+Deselects all currently selected vertices.
 ```javascript
 setVertexColor(index, color)
 ```
