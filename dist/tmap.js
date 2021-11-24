@@ -11981,6 +11981,9 @@ class Faerun {
             indices: indices,
             callback: callback
         };
+
+        // Trigger an update
+        this.updateWatchedVertices();
     }
 
     unwatchVertices(name, pointHelperIndex = 0) {
