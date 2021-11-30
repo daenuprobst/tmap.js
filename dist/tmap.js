@@ -349,6 +349,7 @@ class OrthographicCamera extends CameraBase {
      * @returns {OrthographicCamera} Returns itself.
      */
     updateProjectionMatrix() {
+        //TODO: This is called in each render loop? Does it have to?
         let width = (this.right - this.left) / (2.0 * this.zoom);
         let height = (this.top - this.bottom) / (2.0 * this.zoom);
         let x = (this.right + this.left) / 2.0;
@@ -365,6 +366,22 @@ class OrthographicCamera extends CameraBase {
         this.raiseEvent('projectionmatrixupdated', { source: this });
 
         return this;
+    }
+
+
+    /**
+     * Calculate the required zoom factor to contain an a specified width and height.
+     * 
+     * @param {Number} width Width of regtion to be contained.
+     * @param {Number} height Height of region to be contained.
+     * 
+     * @returns {Number} The zoom to be set to contain the specified width and height.
+     */
+    getRequiredZoomToContain(width, height) {
+        let zoom_width = (this.right - this.left) / (2.0 * width);
+        let zoom_height = (this.top - this.bottom) / (2.0 * height);
+
+        return Math.min(zoom_width, zoom_height);
     }
 
     /**
@@ -848,17 +865,13 @@ class ControlsBase {
   }
 
   /**
-   * Sets the lookat vector, which is the center of the orbital camera sphere.
+   * Virtual method. Sets the lookat vector, which is the center of the orbital camera sphere.
    *
    * @param {Vector3f} lookAt The lookat vector.
    * @returns {ControlsBase} Returns itself.
    */
   setLookAt(lookAt) {
-    //this.camera.position = new Vector3f(this.radius, this.radius, this.radius);
-    this.lookAt = lookAt.clone();
-    this.update();
-
-    return this;
+    return null;
   }
 
   /**
@@ -1155,7 +1168,7 @@ class OrbitalControls extends ControlsBase {
     this.spherical.components[2] += this._dTheta;
     this.spherical.limit(0, this.yRotationLimit, -Infinity, Infinity);
     this.spherical.secure();
-
+    
     // Limit radius here
     this.lookAt.add(this._dPan);
     offset.setFromSphericalCoords(this.spherical);
@@ -1167,6 +1180,38 @@ class OrbitalControls extends ControlsBase {
     this._dPhi = 0.0;
     this._dTheta = 0.0;
     this._dPan.set(0, 0, 0);
+
+    this.raiseEvent("updated");
+
+    return this;
+  }
+
+  /**
+   * Sets the lookat vector, which is the center of the orbital camera sphere.
+   *
+   * @param {Vector3f} lookAt The lookat vector.
+   * @returns {ControlsBase} Returns itself.
+   */
+  setLookAt(lookAt) {
+    // TODO: Most of this code (except for setting lookAt to lookAt instead of _dPan)
+    //       is compied from updated. Maybe fix that
+
+    // Update the camera
+    let offset = this.camera.position.clone().subtract(this.lookAt);
+
+    this.spherical.setFromVector(offset);
+    this.spherical.components[1] += this._dPhi;
+    this.spherical.components[2] += this._dTheta;
+    this.spherical.limit(0, this.yRotationLimit, -Infinity, Infinity);
+    this.spherical.secure();
+    
+    // Limit radius here
+    this.lookAt = lookAt.clone();
+    offset.setFromSphericalCoords(this.spherical);
+
+    this.camera.position.copyFrom(this.lookAt).add(offset);
+    this.camera.setLookAt(this.lookAt);
+    this.camera.updateViewMatrix();
 
     this.raiseEvent("updated");
 
@@ -1248,6 +1293,33 @@ class OrbitalControls extends ControlsBase {
    */
   getZoom() {
     return this.camera.zoom;
+  }
+
+  /**
+   * Set zoom so it contains a bounding box
+   * 
+   * @param {Number} width The width of the square to be contained.
+   * @param {Number} height The height of the square to be contained.
+   * @returns {OrbitalControls} Returns itself.
+   */
+  zoomTo(width, height) {
+    if (this.camera.type !== 'Lore.OrthographicCamera') {
+      throw('Feature not implemented.');
+    }
+
+    this.setZoom(this.camera.getRequiredZoomToContain(width, height));
+
+    return this;
+  }
+
+  /**
+   * 
+   * @param {Vector3f} v The vector to pan to.
+   * @returns {OrbitalControls} Returns itself.
+   */
+  panTo(v) {
+    
+    return this;
   }
 
   /**
@@ -9563,7 +9635,7 @@ class Vector3f {
     }
 
     /**
-     * Subtracts one scalar from another (u - v)
+     * Subtracts one vector from another (u - v)
      * 
      * @static
      * @param {Vector3f} u A vector. 
@@ -9604,6 +9676,22 @@ class Vector3f {
         return u.components[0] * v.components[0] +
             u.components[1] * v.components[1] +
             u.components[2] * v.components[2];
+    }
+
+    /**
+     * Calculates the midpoint between two vectors.
+     * 
+     * @static
+     * @param {Vector3f} u A vector. 
+     * @param {Vector3f} v A vector. 
+     * @returns {Vector3f} The midpoint between the two vectors.
+     */
+     static midpoint(u, v) {
+        return new Vector3f(
+            u.components[0] + v.components[0] / 2.0,
+            u.components[1] + v.components[1] / 2.0,
+            u.components[2] + v.components[2] / 2.0
+        );
     }
 
     /**
@@ -11925,6 +12013,42 @@ class Faerun {
         this.lore.controls.setZoom(zoom);
     }
 
+    zoomTo(indices, pointHelperIndex = 0) {
+        if (indices.length < 2) {
+            throw 'zoomTo() requires more than 1 vertex indices.';
+        }
+
+        let sum = [0.0, 0.0, 0.0];
+        let min = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
+        let max = [0.0, 0.0, 0.0];
+
+        for (let index of indices) {
+            let v = this.pointHelpers[pointHelperIndex].getPosition(index);
+            let x = v.getX();
+            let y = v.getY();
+            let z = v.getZ();
+
+            sum[0] += x; sum[1] += y; sum[2] += z;
+
+            min[0] = Math.min(min[0], x);
+            min[1] = Math.min(min[1], y);
+            min[2] = Math.min(min[2], z);
+
+            max[0] = Math.max(max[0], x);
+            max[1] = Math.max(max[1], y);
+            max[2] = Math.max(max[2], z);
+        }
+
+        let center = new Lore.Math.Vector3f(
+            sum[0] / indices.length,
+            sum[1] / indices.length,
+            sum[2] / indices.length
+        );
+        console.log(min, max);
+        this.lore.controls.setLookAt(center);
+        this.lore.controls.zoomTo(max[0] - min[0], max[1] - max[1]);
+    }
+
     getCanvasOffset() {
         let rect = this.canvas.getBoundingClientRect();
         return { 
@@ -12795,6 +12919,10 @@ class TMAP {
 
     setZoom(zoom) {
         this.faerun.setZoom(zoom);
+    }
+
+    zoomTo(indices) {
+        this.faerun.zoomTo(indices);
     }
 
     resetZoom() {

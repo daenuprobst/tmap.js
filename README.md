@@ -66,6 +66,10 @@ resetZoom()
 ```
 Analogous to `setZoom(1.0)`.
 ```javascript
+zoomTo(indices)
+```
+Zoom and pan to a set of vertices specified as an array `indices` so that they fill the screen.
+```javascript
 snapshot(size = 2.0)
 ```
 This methods takes a screenshot of the canvas and begins the download process in the browser. It takes an argument (`size`) which scales the canvas before the it's buffer is copied to a png to enable higher-resolution screenshots. The default value is `2.0`. Higher values may crash browser tabs.
@@ -103,21 +107,21 @@ See an example below (can also be found in `dist`)
 ```javascript
 
 const vertexCoordinates = {
-    x: [0, 100],
-    y: [0, 100],
-    z: [0, 100]
+    x: [0, 100, 600, 700],
+    y: [0, 100, 600, 700],
+    z: [0, 0, 0, 0]
 };
 
 const edgeCoordinates = {
-    x: [0, 100],
-    y: [0, 100],
-    z: [0, 100]
+    x: [0, 100, 100, 600, 600, 700],
+    y: [0, 100, 100, 600, 600, 700],
+    z: [0, 0, 0, 0, 0, 0]
 };
 
 const colors = {
-    r: [255, 0],
-    g: [0, 255],
-    b: [0, 255]
+    r: [255, 0, 255, 0],
+    g: [0, 255, 255, 0],
+    b: [0, 255, 255, 255]
 };
 
 const labels = [

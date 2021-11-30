@@ -84,6 +84,42 @@ class Faerun {
         this.lore.controls.setZoom(zoom);
     }
 
+    zoomTo(indices, pointHelperIndex = 0) {
+        if (indices.length < 2) {
+            throw 'zoomTo() requires more than 1 vertex indices.';
+        }
+
+        let sum = [0.0, 0.0, 0.0];
+        let min = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
+        let max = [0.0, 0.0, 0.0];
+
+        for (let index of indices) {
+            let v = this.pointHelpers[pointHelperIndex].getPosition(index);
+            let x = v.getX();
+            let y = v.getY();
+            let z = v.getZ();
+
+            sum[0] += x; sum[1] += y; sum[2] += z;
+
+            min[0] = Math.min(min[0], x);
+            min[1] = Math.min(min[1], y);
+            min[2] = Math.min(min[2], z);
+
+            max[0] = Math.max(max[0], x);
+            max[1] = Math.max(max[1], y);
+            max[2] = Math.max(max[2], z);
+        }
+
+        let center = new Lore.Math.Vector3f(
+            sum[0] / indices.length,
+            sum[1] / indices.length,
+            sum[2] / indices.length
+        );
+        console.log(min, max);
+        this.lore.controls.setLookAt(center);
+        this.lore.controls.zoomTo(max[0] - min[0], max[1] - max[1]);
+    }
+
     getCanvasOffset() {
         let rect = this.canvas.getBoundingClientRect();
         return { 

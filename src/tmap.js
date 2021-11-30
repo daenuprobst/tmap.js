@@ -95,6 +95,10 @@ class TMAP {
         this.faerun.setZoom(zoom);
     }
 
+    zoomTo(indices) {
+        this.faerun.zoomTo(indices);
+    }
+
     resetZoom() {
         this.faerun.setZoom(1.0);
     }

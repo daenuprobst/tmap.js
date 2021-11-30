@@ -22,6 +22,6 @@
   },
   "homepage": "https://github.com/daenuprobst/tmap.js#readme",
   "dependencies": {
-    "lore-engine": "^1.1.10"
+    "lore-engine": "^1.1.22"
   }
 }
