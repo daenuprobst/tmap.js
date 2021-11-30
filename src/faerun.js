@@ -120,6 +120,17 @@ class Faerun {
         this.lore.controls.zoomTo(max[0] - min[0], max[1] - max[1]);
     }
 
+    zoomToFit(pointHelperIndex = 0) {
+        let center = this.pointHelpers[pointHelperIndex].getCenter();
+        let dims = this.pointHelpers[pointHelperIndex].getDimensions();
+
+        this.lore.controls.setLookAt(center);
+        this.lore.controls.zoomTo(
+            dims.max.getX() - dims.min.getX(), 
+            dims.max.getY() - dims.min.getY()
+        );
+    }
+
     getCanvasOffset() {
         let rect = this.canvas.getBoundingClientRect();
         return { 

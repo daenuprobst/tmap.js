@@ -70,6 +70,10 @@ zoomTo(indices)
 ```
 Zoom and pan to a set of vertices specified as an array `indices` so that they fill the screen.
 ```javascript
+zoomToFit()
+```
+Zoom and pan to fit the entire map.
+```javascript
 snapshot(size = 2.0)
 ```
 This methods takes a screenshot of the canvas and begins the download process in the browser. It takes an argument (`size`) which scales the canvas before the it's buffer is copied to a png to enable higher-resolution screenshots. The default value is `2.0`. Higher values may crash browser tabs.
