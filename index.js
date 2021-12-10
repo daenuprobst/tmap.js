@@ -1,3 +1,3 @@
-TMAP = require('./src/tmap.js')
+let TMAP = require('./src/tmap.js')
 
 module.exports = TMAP

@@ -1,4 +1,4 @@
-Lore = require('lore-engine')
+let Lore = require('lore-engine')
 
 class Faerun {
     constructor(
