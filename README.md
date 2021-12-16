@@ -58,9 +58,9 @@ In addition, there is the `onVertexOut` callback, which does not supply an objec
 
 Aside from the methods accepting callback functions, the methods of the `TMAP` class are:
 ```javascript
-setZoom(zoom)
+setZoom(zoom, relativeToLastFit=false)
 ```
-where `zoom` can be any float / double value. The default zoom is `1.0` and values below zoom out while values above zoom in.
+where `zoom` can be any float / double value. The default zoom is `1.0` and values below zoom out while values above zoom in. If `relativeToLastFit` is set to `true`, the `zoom` is relative to the last call of `zoomToFit()`. 
 ```javascript
 resetZoom()
 ```

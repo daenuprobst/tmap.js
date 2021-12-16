@@ -12013,6 +12013,10 @@ class Faerun {
         this.lore.controls.setZoom(zoom);
     }
 
+    getZoom() {
+        return this.lore.controls.getZoom();
+    }
+
     zoomTo(indices, pointHelperIndex = 0) {
         if (indices.length < 2) {
             throw 'zoomTo() requires more than 1 vertex indices.';
@@ -12850,6 +12854,7 @@ class TMAP {
         pointScale = 5,
         hasLegend = false,
     ) {
+        this.lastFitZoom = 1.0
         this.originalVertexColors = {};
 
         this.canvasId = canvasId;
@@ -12928,16 +12933,23 @@ class TMAP {
         );
     }
 
-    setZoom(zoom) {
+    setZoom(zoom, relativeToLastFit=false) {
+        if (relativeToLastFit) {
+            zoom *= this.lastFitZoom;
+        }
+        
         this.faerun.setZoom(zoom);
     }
 
     zoomTo(indices) {
         this.faerun.zoomTo(indices);
+        console.log(this.faerun.getZoom());
     }
 
     zoomToFit() {
         this.faerun.zoomToFit();
+        this.lastFitZoom = this.faerun.getZoom();
+        console.log(this.lastFitZoom);
     }
 
     resetZoom() {

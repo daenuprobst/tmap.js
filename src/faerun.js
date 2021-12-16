@@ -84,6 +84,10 @@ class Faerun {
         this.lore.controls.setZoom(zoom);
     }
 
+    getZoom() {
+        return this.lore.controls.getZoom();
+    }
+
     zoomTo(indices, pointHelperIndex = 0) {
         if (indices.length < 2) {
             throw 'zoomTo() requires more than 1 vertex indices.';
