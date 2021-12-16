@@ -62,9 +62,9 @@ setZoom(zoom, relativeToLastFit=false)
 ```
 where `zoom` can be any float / double value. The default zoom is `1.0` and values below zoom out while values above zoom in. If `relativeToLastFit` is set to `true`, the `zoom` is relative to the last call of `zoomToFit()`. 
 ```javascript
-resetZoom()
+resetZoom(relativeToLastFit=false)
 ```
-Analogous to `setZoom(1.0)`.
+Analogous to `setZoom(1.0)` or `setZoom(1.0, true)`.
 ```javascript
 zoomTo(indices)
 ```

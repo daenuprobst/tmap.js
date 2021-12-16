@@ -111,8 +111,12 @@ class TMAP {
         console.log(this.lastFitZoom);
     }
 
-    resetZoom() {
-        this.faerun.setZoom(1.0);
+    resetZoom(relativeToLastFit=false) {
+        if (relativeToLastFit) {
+            this.faerun.setZoom(this.lastFitZoom);
+        } else {
+            this.faerun.setZoom(1.0);
+        }
     }
 
     snapshot(size = 2.0) {
