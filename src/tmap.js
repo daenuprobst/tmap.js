@@ -102,13 +102,12 @@ class TMAP {
 
     zoomTo(indices) {
         this.faerun.zoomTo(indices);
-        console.log(this.faerun.getZoom());
+        this.lastFitZoom = this.faerun.getZoom();
     }
 
     zoomToFit() {
         this.faerun.zoomToFit();
         this.lastFitZoom = this.faerun.getZoom();
-        console.log(this.lastFitZoom);
     }
 
     resetZoom(relativeToLastFit=false) {
