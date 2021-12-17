@@ -2,9 +2,9 @@ Faerun = require('./faerun.js');
 
 class TMAP {
     constructor(
-        canvasId, 
-        vertexCoordinates, 
-        edgeCoordinates, 
+        canvasId,
+        vertexCoordinates,
+        edgeCoordinates,
         colors,
         labels = null,
         backgroundColor = "#222222",
@@ -17,7 +17,7 @@ class TMAP {
         this.originalVertexColors = {};
 
         this.canvasId = canvasId;
-        
+
         this.scatterMeta = [{
             "categorical": [true],
             "fog_intensity": 0.0,
@@ -64,7 +64,7 @@ class TMAP {
             "point_helper": "DATA"
         }];
 
-        
+
         const data = {
             DATA: {
                 x: vertexCoordinates.x,
@@ -87,16 +87,16 @@ class TMAP {
         }
 
         this.faerun = new Faerun(
-            canvasId, this.scatterMeta, this.treeMeta, 
+            canvasId, this.scatterMeta, this.treeMeta,
             data, backgroundColor, hasLegend
         );
     }
 
-    setZoom(zoom, relativeToLastFit=false) {
+    setZoom(zoom, relativeToLastFit = false) {
         if (relativeToLastFit) {
             zoom *= this.lastFitZoom;
         }
-        
+
         this.faerun.setZoom(zoom);
     }
 
@@ -110,7 +110,7 @@ class TMAP {
         this.lastFitZoom = this.faerun.getZoom();
     }
 
-    resetZoom(relativeToLastFit=false) {
+    resetZoom(relativeToLastFit = false) {
         if (relativeToLastFit) {
             this.faerun.setZoom(this.lastFitZoom);
         } else {
@@ -118,8 +118,8 @@ class TMAP {
         }
     }
 
-    snapshot(size = 2.0) {
-        this.faerun.snapshot(size);
+    snapshot(callback = null, size = 2.0) {
+        this.faerun.snapshot(callback, size);
     }
 
     setVertexColor(index, color, backup = true) {

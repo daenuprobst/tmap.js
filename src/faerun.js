@@ -121,7 +121,7 @@ class Faerun {
         );
         console.log(min, max);
         this.lore.controls.setLookAt(center);
-        this.lore.controls.zoomTo(max[0] - min[0], max[1] - max[1]);
+        this.lore.controls.zoomTo(max[0] - min[0], max[1] - min[1]);
     }
 
     zoomToFit(pointHelperIndex = 0) {
@@ -130,16 +130,16 @@ class Faerun {
 
         this.lore.controls.setLookAt(center);
         this.lore.controls.zoomTo(
-            dims.max.getX() - dims.min.getX(), 
+            dims.max.getX() - dims.min.getX(),
             dims.max.getY() - dims.min.getY()
         );
     }
 
     getCanvasOffset() {
         let rect = this.canvas.getBoundingClientRect();
-        return { 
-            top: rect.top + window.scrollY, 
-            left: rect.left + window.scrollX, 
+        return {
+            top: rect.top + window.scrollY,
+            left: rect.left + window.scrollX,
         };
     }
 
@@ -199,11 +199,11 @@ class Faerun {
     unwatchVertices(name, pointHelperIndex = 0) {
         if (!this.watchedVertices.hasOwnProperty(pointHelperIndex))
             return
-        
+
         delete this.watchedVertices[pointHelperIndex][name];
     }
 
-    snapshot(size = 2) {
+    snapshot(callback = null, size = 2) {
         let canvas = document.getElementById(this.canvasId);
         let zoom = this.lore.controls.getZoom();
         canvas.style.width = (canvas.width * size) + 'px';
@@ -220,6 +220,9 @@ class Faerun {
                     canvas.style.width = '100%';
                     canvas.style.height = '100%';
                     this.lore.controls.setZoom(zoom);
+                    if (callback) {
+                        callback();
+                    }
                 }, 2000);
             });
         }, 2000);
@@ -248,7 +251,7 @@ class Faerun {
             let ph = new Lore.Helpers.PointHelper(
                 this.lore, s.name, s.shader, { maxPointSize: s.max_point_size }
             );
-            
+
             let phIndex = this.pointHelpers.length;
 
             ph.setXYZRGBS(this.data[s.name].x, this.data[s.name].y, this.data[s.name].z,
@@ -256,9 +259,9 @@ class Faerun {
                 this.data[s.name]['colors'][0].b, this.data[s.name]['s'] ? this.data[s.name]['s'][0] : 1.0);
             ph.setPointScale(s.point_scale);
             ph.setFog([this.clearColor.components[0], this.clearColor.components[1],
-                this.clearColor.components[2], this.clearColor.components[3]],
+            this.clearColor.components[2], this.clearColor.components[3]],
                 s.fog_intensity)
-            
+
             this.phIndexMap[s.name] = phIndex;
             this.pointHelpers.push(ph);
             this.min[0] = Faerun.getMin(this.data[s.name].x, this.min[0]);
@@ -371,7 +374,7 @@ class Faerun {
             let phName = this.ohIndexToPhName[e.source];
             if (e.e) {
                 let fullLabel = "";
-                if (this.data[phName].labels) 
+                if (this.data[phName].labels)
                     fullLabel = this.data[phName].labels[e.e.index];
 
                 let labelIndex = this.scatterMeta[this.ohIndexToPhIndex[e.source]]
@@ -404,8 +407,9 @@ class Faerun {
 
                 if (this.onVertexOverCallback)
                     this.onVertexOverCallback({
-                        x: x, y: y, index: e.e.index, 
-                        color: [rgbColor[0], rgbColor[1], rgbColor[2]]});
+                        x: x, y: y, index: e.e.index,
+                        color: [rgbColor[0], rgbColor[1], rgbColor[2]]
+                    });
             } else {
                 this.currentPoint = null;
 
@@ -446,7 +450,7 @@ class Faerun {
                     index: lastItem.index,
                     color: lastItem.color
                 });
-            } 
+            }
         });
 
         document.addEventListener('dblclick', e => {
@@ -615,7 +619,7 @@ class Faerun {
                 container.appendChild(
                     Faerun.createElement(
                         'div', {
-                            id: `legend-${s.name}`,
+                        id: `legend-${s.name}`,
                         classes: 'legend-section',
                         'data-name': `${s.name}`
                     },
@@ -684,8 +688,8 @@ class Faerun {
         let labelIndex = meta.label_index[seriesState];
         let titleIndex = meta.title_index[seriesState];
         let selectedLabels = meta.selected_labels[seriesState];
-        
-        
+
+
         // Add the indicator for this object
         let indicatorElement = Faerun.createElement(
             'div',
@@ -730,20 +734,20 @@ class Faerun {
                 let watcher = this.watchedVertices[pointHelperIndex][name];
 
                 let callbackData = [];
-                
+
                 for (let j = 0; j < watcher.indices.length; j++) {
                     let vertex = watcher.indices[j];
                     let screenPosition = this.octreeHelpers[ohIndex]
                         .getScreenPosition(vertex);
 
-                    callbackData.push({ 
+                    callbackData.push({
                         x: screenPosition[0],
                         y: screenPosition[1],
                         index: vertex,
                         color: this.getVertexColor(vertex, pointHelperIndex)
                     });
                 }
-                
+
                 if (watcher.callback) {
                     watcher.callback(callbackData);
                 }

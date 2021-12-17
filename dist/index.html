@@ -1,37 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="x-ua-compatible" content="ie=edge, chrome=1" />
-        <title>TMAP</title>
-        <link rel="stylesheet" href="style.css" />
-    </head>
-    <body>
-        <canvas id="tmapCanvas"></canvas>
-        <div id="hover-indicator" data-tmap="hoverIndicator"></div>
-        <div id="controls">
-            <button onclick="tmap.setZoom(2.0)">setZoom(2.0)</button>
-            <button onclick="tmap.setZoom(0.5)">setZoom(0.5)</button>
-            <button onclick="tmap.resetZoom()">resetZoom()</button>
-            <button onclick="tmap.snapshot()">snapshot()</button>
-            <br />
-            <button onclick="tmap.setZoom(2.0, true)">setZoom(2.0, true)</button>
-            <button onclick="tmap.setZoom(0.5, true)">setZoom(0.5, true)</button>
-            <button onclick="tmap.resetZoom(true)">resetZoom(true)</button>
-            <br />
-            <button onclick="tmap.selectVertex(0)">selectVertex(0)</button>
-            <button onclick="tmap.deselectVertex(0)">deselectVertex(0)</button>
-            <button onclick="tmap.deselectAllVertices()">deselectAllVertices()</button>
-            <br />
-            <button onclick="tmap.setVertexColor(0, [255, 255, 0])">setVertexColor(0, [255, 255, 0])</button>
-            <button onclick="tmap.resetVertexColors()">resetVertexColors()</button>
-            <br />
-            <button onclick="tmap.removeWatcher('test')">removeWatcher("test")</button>
-            <br />
-            <button onclick="tmap.zoomTo([2, 3])">tmap.zoomTo([2, 3])</button>
-            <button onclick="tmap.zoomToFit()">tmap.zoomToFit()</button>
-        </div>
-        <script src="tmap.js"></script>
-        <script src="main.js"></script>
-    </body>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge, chrome=1" />
+    <title>TMAP</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <canvas id="tmapCanvas"></canvas>
+    <div id="hover-indicator" data-tmap="hoverIndicator"></div>
+    <div id="controls">
+        <button onclick="tmap.setZoom(2.0)">setZoom(2.0)</button>
+        <button onclick="tmap.setZoom(0.5)">setZoom(0.5)</button>
+        <button onclick="tmap.resetZoom()">resetZoom()</button>
+        <button onclick="tmap.snapshot(() => { console.log('snapped!') })">snapshot()</button>
+        <br />
+        <button onclick="tmap.setZoom(2.0, true)">setZoom(2.0, true)</button>
+        <button onclick="tmap.setZoom(0.5, true)">setZoom(0.5, true)</button>
+        <button onclick="tmap.resetZoom(true)">resetZoom(true)</button>
+        <br />
+        <button onclick="tmap.selectVertex(0)">selectVertex(0)</button>
+        <button onclick="tmap.deselectVertex(0)">deselectVertex(0)</button>
+        <button onclick="tmap.deselectAllVertices()">deselectAllVertices()</button>
+        <br />
+        <button onclick="tmap.setVertexColor(0, [255, 255, 0])">setVertexColor(0, [255, 255, 0])</button>
+        <button onclick="tmap.resetVertexColors()">resetVertexColors()</button>
+        <br />
+        <button onclick="tmap.removeWatcher('test')">removeWatcher("test")</button>
+        <br />
+        <button onclick="tmap.zoomTo([719, 656, 1964])">tmap.zoomTo([719, 656, 1964])</button>
+        <button onclick="tmap.zoomTo([719, 656])">tmap.zoomTo([2, 3])</button>
+        <button onclick="tmap.zoomToFit()">tmap.zoomToFit()</button>
+    </div>
+    <script src="tmap.js"></script>
+    <script src="main.js"></script>
+</body>
+
 </html>
