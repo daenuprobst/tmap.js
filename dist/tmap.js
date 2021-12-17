@@ -12149,6 +12149,7 @@ class Faerun {
                     canvas.style.width = '100%';
                     canvas.style.height = '100%';
                     this.lore.controls.setZoom(zoom);
+                    this.updateWatchedVertices();
                     if (callback) {
                         callback();
                     }
