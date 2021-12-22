@@ -66,11 +66,11 @@ resetZoom(relativeToLastFit=false)
 ```
 Analogous to `setZoom(1.0)` or `setZoom(1.0, true)`.
 ```javascript
-zoomTo(indices)
+zoomTo(indices, padding = 0.0)
 ```
 Zoom and pan to a set of vertices specified as an array `indices` so that they fill the screen.
 ```javascript
-zoomToFit()
+zoomToFit(padding = 0.0)
 ```
 Zoom and pan to fit the entire map.
 ```javascript

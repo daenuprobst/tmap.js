@@ -327,7 +327,7 @@ class OrthographicCamera extends CameraBase {
      * @param {Number} bottom Bottom extend of the viewing volume.
      * @param {Number} near Near extend of the viewing volume.
      * @param {Number} far Far extend of the viewing volume.
-     */ 
+     */
     constructor(left, right, top, bottom, near = 0.1, far = 2500) {
         super();
 
@@ -359,7 +359,7 @@ class OrthographicCamera extends CameraBase {
         let right = x + width;
         let top = y + height;
         let bottom = y - height;
-        
+
         this.projectionMatrix.setOrthographic(left, right, top, bottom, this.near, this.far);
         this.isProjectionMatrixStale = true;
 
@@ -374,12 +374,14 @@ class OrthographicCamera extends CameraBase {
      * 
      * @param {Number} width Width of regtion to be contained.
      * @param {Number} height Height of region to be contained.
+     * @param {Number} padding Padding applied to the zoom as a fraction of width and height.
      * 
      * @returns {Number} The zoom to be set to contain the specified width and height.
      */
-    getRequiredZoomToContain(width, height) {
-        let zoom_width = (this.right - this.left) / (2.0 * width);
-        let zoom_height = (this.top - this.bottom) / (2.0 * height);
+    getRequiredZoomToContain(width, height, padding = 0.0) {
+
+        let zoom_width = (this.right - this.left) / (width + width * padding);
+        let zoom_height = (this.top - this.bottom) / (height + height * padding);
 
         return Math.min(zoom_width, zoom_height);
     }
@@ -1050,15 +1052,15 @@ class OrbitalControls extends ControlsBase {
 
     let that = this;
 
-    this.addEventListener("mousedrag", function(e) {
+    this.addEventListener("mousedrag", function (e) {
       that.update(e.e, e.source);
     });
 
-    this.addEventListener("touch", function(e) {
+    this.addEventListener("touch", function (e) {
       that.update(e.e, e.source);
     });
 
-    this.addEventListener("mousewheel", function(e) {
+    this.addEventListener("mousewheel", function (e) {
       that.update(
         {
           x: 0,
@@ -1168,7 +1170,7 @@ class OrbitalControls extends ControlsBase {
     this.spherical.components[2] += this._dTheta;
     this.spherical.limit(0, this.yRotationLimit, -Infinity, Infinity);
     this.spherical.secure();
-    
+
     // Limit radius here
     this.lookAt.add(this._dPan);
     offset.setFromSphericalCoords(this.spherical);
@@ -1204,7 +1206,7 @@ class OrbitalControls extends ControlsBase {
     this.spherical.components[2] += this._dTheta;
     this.spherical.limit(0, this.yRotationLimit, -Infinity, Infinity);
     this.spherical.secure();
-    
+
     // Limit radius here
     this.lookAt = lookAt.clone();
     offset.setFromSphericalCoords(this.spherical);
@@ -1300,14 +1302,19 @@ class OrbitalControls extends ControlsBase {
    * 
    * @param {Number} width The width of the square to be contained.
    * @param {Number} height The height of the square to be contained.
+   * @param {Number} padding Padding applied to the zoom as a fraction of width and height.
    * @returns {OrbitalControls} Returns itself.
    */
-  zoomTo(width, height) {
+  zoomTo(width, height, padding = 0.0) {
     if (this.camera.type !== 'Lore.OrthographicCamera') {
-      throw('Feature not implemented.');
+      throw ('Feature not implemented.');
     }
 
-    this.setZoom(this.camera.getRequiredZoomToContain(width, height));
+    this.setZoom(this.camera.getRequiredZoomToContain(
+      width,
+      height,
+      padding
+    ));
 
     return this;
   }
@@ -1318,7 +1325,6 @@ class OrbitalControls extends ControlsBase {
    * @returns {OrbitalControls} Returns itself.
    */
   panTo(v) {
-    
     return this;
   }
 
@@ -12017,22 +12023,20 @@ class Faerun {
         return this.lore.controls.getZoom();
     }
 
-    zoomTo(indices, pointHelperIndex = 0) {
+    zoomTo(indices, padding = 0.1, pointHelperIndex = 0) {
         if (indices.length < 2) {
             throw 'zoomTo() requires more than 1 vertex indices.';
         }
 
         let sum = [0.0, 0.0, 0.0];
         let min = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
-        let max = [0.0, 0.0, 0.0];
+        let max = [-Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER];
 
         for (let index of indices) {
             let v = this.pointHelpers[pointHelperIndex].getPosition(index);
             let x = v.getX();
             let y = v.getY();
             let z = v.getZ();
-
-            sum[0] += x; sum[1] += y; sum[2] += z;
 
             min[0] = Math.min(min[0], x);
             min[1] = Math.min(min[1], y);
@@ -12044,23 +12048,24 @@ class Faerun {
         }
 
         let center = new Lore.Math.Vector3f(
-            sum[0] / indices.length,
-            sum[1] / indices.length,
-            sum[2] / indices.length
+            (max[0] + min[0]) / 2.0,
+            (max[1] + min[1]) / 2.0,
+            (max[2] + min[2]) / 2.0
         );
-        console.log(min, max);
+
         this.lore.controls.setLookAt(center);
-        this.lore.controls.zoomTo(max[0] - min[0], max[1] - min[1]);
+        this.lore.controls.zoomTo(max[0] - min[0], max[1] - min[1], padding);
     }
 
-    zoomToFit(pointHelperIndex = 0) {
+    zoomToFit(padding = 0, pointHelperIndex = 0) {
         let center = this.pointHelpers[pointHelperIndex].getCenter();
         let dims = this.pointHelpers[pointHelperIndex].getDimensions();
 
         this.lore.controls.setLookAt(center);
         this.lore.controls.zoomTo(
             dims.max.getX() - dims.min.getX(),
-            dims.max.getY() - dims.min.getY()
+            dims.max.getY() - dims.min.getY(),
+            padding
         );
     }
 
@@ -12946,13 +12951,13 @@ class TMAP {
         this.faerun.setZoom(zoom);
     }
 
-    zoomTo(indices) {
-        this.faerun.zoomTo(indices);
+    zoomTo(indices, padding = 0.0) {
+        this.faerun.zoomTo(indices, padding);
         this.lastFitZoom = this.faerun.getZoom();
     }
 
-    zoomToFit() {
-        this.faerun.zoomToFit();
+    zoomToFit(padding = 0.0) {
+        this.faerun.zoomToFit(padding);
         this.lastFitZoom = this.faerun.getZoom();
     }
 

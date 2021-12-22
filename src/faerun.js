@@ -88,22 +88,20 @@ class Faerun {
         return this.lore.controls.getZoom();
     }
 
-    zoomTo(indices, pointHelperIndex = 0) {
+    zoomTo(indices, padding = 0.1, pointHelperIndex = 0) {
         if (indices.length < 2) {
             throw 'zoomTo() requires more than 1 vertex indices.';
         }
 
         let sum = [0.0, 0.0, 0.0];
         let min = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
-        let max = [0.0, 0.0, 0.0];
+        let max = [-Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER];
 
         for (let index of indices) {
             let v = this.pointHelpers[pointHelperIndex].getPosition(index);
             let x = v.getX();
             let y = v.getY();
             let z = v.getZ();
-
-            sum[0] += x; sum[1] += y; sum[2] += z;
 
             min[0] = Math.min(min[0], x);
             min[1] = Math.min(min[1], y);
@@ -115,23 +113,24 @@ class Faerun {
         }
 
         let center = new Lore.Math.Vector3f(
-            sum[0] / indices.length,
-            sum[1] / indices.length,
-            sum[2] / indices.length
+            (max[0] + min[0]) / 2.0,
+            (max[1] + min[1]) / 2.0,
+            (max[2] + min[2]) / 2.0
         );
-        console.log(min, max);
+
         this.lore.controls.setLookAt(center);
-        this.lore.controls.zoomTo(max[0] - min[0], max[1] - min[1]);
+        this.lore.controls.zoomTo(max[0] - min[0], max[1] - min[1], padding);
     }
 
-    zoomToFit(pointHelperIndex = 0) {
+    zoomToFit(padding = 0, pointHelperIndex = 0) {
         let center = this.pointHelpers[pointHelperIndex].getCenter();
         let dims = this.pointHelpers[pointHelperIndex].getDimensions();
 
         this.lore.controls.setLookAt(center);
         this.lore.controls.zoomTo(
             dims.max.getX() - dims.min.getX(),
-            dims.max.getY() - dims.min.getY()
+            dims.max.getY() - dims.min.getY(),
+            padding
         );
     }
 
