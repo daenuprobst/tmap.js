@@ -78,6 +78,7 @@ class Faerun {
         this.onVertexOverCallback = null;
         this.onVertexOutCallback = null;
         this.watchedVertices = {};
+        this.zoomWatcher = null;
     }
 
     setZoom(zoom) {
@@ -200,6 +201,10 @@ class Faerun {
             return
 
         delete this.watchedVertices[pointHelperIndex][name];
+    }
+
+    watchZoom(callback) {
+        this.lore.controls.addEventListener('zoomchanged', callback);
     }
 
     snapshot(callback = null, size = 2) {

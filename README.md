@@ -105,6 +105,10 @@ Callback receives an array of screen positions, indices and colours (e.g. `[{ x:
 removeWatcher(name)
 ```
 Remove the watcher with name `name`.
+```javascript
+watchZoom(callback)
+```
+Callback receives the value of the current zoom. This is a wrapper around `lore.controls.addEventListener('zoomchanged', callback)` and does not respect `lastFitZoom`.
 
 ### Example
 See an example below (can also be found in `dist`)

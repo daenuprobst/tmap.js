@@ -173,6 +173,10 @@ class TMAP {
     removeWatcher(name) {
         this.faerun.unwatchVertices(name);
     }
+
+    watchZoom(callback) {
+        this.faerun.watchZoom(callback);
+    }
 }
 
 module.exports = TMAP

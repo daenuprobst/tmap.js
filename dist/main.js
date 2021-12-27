@@ -66,3 +66,7 @@ tmap.onVertexClick(e => {
 tmap.addWatcher("test", [0, 1], e => {
     console.log(e);
 });
+
+tmap.watchZoom(zoom => {
+    console.log("Zoom changed.", zoom);
+})
