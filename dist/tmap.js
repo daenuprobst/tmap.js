@@ -12986,6 +12986,10 @@ class TMAP {
         this.faerun.setVertexColor(index, color);
     }
 
+    setLastFitZoom(lastFitZoom) {
+        this.lastFitZoom = lastFitZoom;
+    }
+
     resetVertexColors() {
         for (let key in this.originalVertexColors) {
             this.setVertexColor(

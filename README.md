@@ -74,6 +74,10 @@ zoomToFit(padding = 0.0)
 ```
 Zoom and pan to fit the entire map.
 ```javascript
+setLastFitZoom(lastFitZoom)
+```
+Set the `lastFitZoom` value manually.
+```javascript
 snapshot(callback = null, size = 2.0)
 ```
 This methods takes a screenshot of the canvas and begins the download process in the browser. It takes an argument (`size`) which scales the canvas before the it's buffer is copied to a png to enable higher-resolution screenshots. The default value is `2.0`. Higher values may crash browser tabs. After the canvas has been scaled back to it's original size, `callback` is called.
