@@ -1,5 +1,5 @@
 {
-  "name": "tmap",
+  "name": "tmap-faerun-js",
   "version": "1.0.0",
   "description": "A JavaScript API to load and display TMAPs in the browser.",
   "main": "index.js",
