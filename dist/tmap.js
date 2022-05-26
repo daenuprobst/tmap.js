@@ -8,19 +8,19 @@ module.exports = TMAP
 // Detect SSR (server side rendering)
 var canUseDOM = !!(
   (typeof window !== 'undefined' &&
-  window.document && window.document.createElement)
+    window.document && window.document.createElement)
 );
 
 var Lore = require('./src/Lore');
 
 // By Shmiddty from stackoverflow
-function Enum(a){
+function Enum(a) {
   let i = Object
     .keys(a)
-    .reduce((o, k)=>(o[a[k]] = k, o), {});
+    .reduce((o, k) => (o[a[k]] = k, o), {});
 
   return Object.freeze(
-    Object.keys(a).reduce((o, k)=>(o[k] = a[k],o), v => i[v])
+    Object.keys(a).reduce((o, k) => (o[k] = a[k], o), v => i[v])
   );
 }
 
@@ -40,57 +40,61 @@ Lore.Keyboard = Enum({
   Esc: 27
 });
 
-Lore.init = function(canvas, options) {
+Lore.init = function (canvas, options) {
   this.opts = Lore.Utils.extend(true, Lore.defaults, options);
-  
+
   // Lore.getGrakaInfo(canvas);
-  
+
   var cc = Lore.Core.Color.fromHex(this.opts.clearColor);
 
+  if (!(canvas instanceof Element)) {
+    canvas = document.getElementById(canvas);
+  }
+
   var renderer = new Lore.Core.Renderer(canvas, {
-      clearColor: cc,
-      verbose: true,
-      fps: document.getElementById('fps'),
-      center: new Lore.Math.Vector3f(125, 125, 125),
-      antialiasing: this.opts.antialiasing,
-      alphaBlending: this.opts.alphaBlending,
-      preserveDrawingBuffer: this.opts.preserveDrawingBuffer
+    clearColor: cc,
+    verbose: true,
+    fps: document.getElementById('fps'),
+    center: new Lore.Math.Vector3f(125, 125, 125),
+    antialiasing: this.opts.antialiasing,
+    alphaBlending: this.opts.alphaBlending,
+    preserveDrawingBuffer: this.opts.preserveDrawingBuffer
   });
- 
+
   renderer.controls.limitRotationToHorizon(this.opts.limitRotationToHorizon);
 
-  renderer.render = function(camera, geometries) {
-      for(var key in geometries) {
-          geometries[key].draw(renderer);
-      }
+  renderer.render = function (camera, geometries) {
+    for (var key in geometries) {
+      geometries[key].draw(renderer);
+    }
   }
 
   return renderer;
 }
 
-Lore.getGrakaInfo = function(targetId) {
+Lore.getGrakaInfo = function (targetId) {
   let canvas = document.getElementById(targetId);
-  let gl = canvas.getContext('webgl') || 
-           canvas.getContext('experimental-webgl');
+  let gl = canvas.getContext('webgl') ||
+    canvas.getContext('experimental-webgl');
 
   let info = {
-      renderer: '',
-      vendor: ''
+    renderer: '',
+    vendor: ''
   };
 
   let dbgRenderInfo = gl.getExtension('WEBGL_debug_renderer_info');
-  
+
   if (dbgRenderInfo != null) {
-      info.renderer = gl.getParameter(dbgRenderInfo.UNMASKED_RENDERER_WEBGL);
-      info.vendor   = gl.getParameter(dbgRenderInfo.UNMASKED_VENDOR_WEBGL);
+    info.renderer = gl.getParameter(dbgRenderInfo.UNMASKED_RENDERER_WEBGL);
+    info.vendor = gl.getParameter(dbgRenderInfo.UNMASKED_VENDOR_WEBGL);
   }
 
   return info;
 }
 
-Lore.supportsHighQuality = function(targetId) {
+Lore.supportsHighQuality = function (targetId) {
   let info = Lore.getGrakaInfo(targetId);
-  
+
 
   return false;
 }
@@ -3202,10 +3206,10 @@ class Renderer {
 
   /**
    * Creates an instance of Renderer.
-   * @param {String} targetId The id of a canvas element.
+   * @param {Element} target A canvas element.
    * @param {any} options The options.
    */
-  constructor(targetId, options) {
+  constructor(target, options) {
     this.defaults = {
       antialiasing: true,
       verbose: false,
@@ -3221,7 +3225,7 @@ class Renderer {
 
     this.opts = Utils.extend(true, this.defaults, options);
 
-    this.canvas = document.getElementById(targetId);
+    this.canvas = target;
     this.webgl2 = true;
     this.parent = this.canvas.parentElement;
     this.fps = 0;
@@ -3234,7 +3238,7 @@ class Renderer {
     this.geometries = {};
     this.ready = false;
     this.gl = null;
-    this.render = function (camera, geometries) {};
+    this.render = function (camera, geometries) { };
     this.effect = null;
     this.lastTiming = performance.now();
 
@@ -11959,7 +11963,11 @@ class Faerun {
         }
     ) {
         this.canvasId = canvasId;
-        this.canvas = document.getElementById(this.canvasId)
+        if (Faerun.isElement(this.canvasId)) {
+            this.canvas = this.canvasId;
+        } else {
+            this.canvas = document.getElementById(this.canvasId);
+        }
         this.body = document.getElementsByTagName('body')[0];
         this.selectedItems = [];
         this.selectedIndicators = [];
@@ -12143,7 +12151,7 @@ class Faerun {
     }
 
     snapshot(callback = null, size = 2) {
-        let canvas = document.getElementById(this.canvasId);
+        let canvas = this.canvas;
         let zoom = this.lore.controls.getZoom();
         canvas.style.width = (canvas.width * size) + 'px';
         canvas.style.height = (canvas.height * size) + 'px';
@@ -12795,6 +12803,10 @@ class Faerun {
             )
         });
         return scale;
+    }
+
+    static isElement(obj) {
+        return obj instanceof Element;
     }
 
     static createElement(tag, values = {}, children = []) {

@@ -24,7 +24,11 @@ class Faerun {
         }
     ) {
         this.canvasId = canvasId;
-        this.canvas = document.getElementById(this.canvasId)
+        if (Faerun.isElement(this.canvasId)) {
+            this.canvas = this.canvasId;
+        } else {
+            this.canvas = document.getElementById(this.canvasId);
+        }
         this.body = document.getElementsByTagName('body')[0];
         this.selectedItems = [];
         this.selectedIndicators = [];
@@ -208,7 +212,7 @@ class Faerun {
     }
 
     snapshot(callback = null, size = 2) {
-        let canvas = document.getElementById(this.canvasId);
+        let canvas = this.canvas;
         let zoom = this.lore.controls.getZoom();
         canvas.style.width = (canvas.width * size) + 'px';
         canvas.style.height = (canvas.height * size) + 'px';
@@ -860,6 +864,10 @@ class Faerun {
             )
         });
         return scale;
+    }
+
+    static isElement(obj) {
+        return obj instanceof Element;
     }
 
     static createElement(tag, values = {}, children = []) {
