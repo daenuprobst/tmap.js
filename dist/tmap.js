@@ -569,7 +569,7 @@ class ControlsBase {
     // Set the touch action of the canvas
     this.canvas.style.touchAction = 'none';
 
-    this.canvas.addEventListener("pointermove", function(e) {
+    this.canvas.addEventListener("pointermove", function (e) {
       // Find this event in the cache and update its record with this event
       for (var i = 0; i < that.mouse.pointerCache.length; i++) {
         if (e.pointerId == that.mouse.pointerCache[i].pointerId) {
@@ -577,15 +577,15 @@ class ControlsBase {
           break;
         }
       }
-      
+
       // Get the current average / center of mass pointer location
       let pointerLoc = that.getPointerLocation();
-      
+
       // Handle touch gestures and mouse events
       // If there are two pointer events, it has to be touch
       if (that.mouse.pointerCache.length === 2) {
         var diff = Math.pow(that.mouse.pointerCache[1].clientX - that.mouse.pointerCache[0].clientX, 2) +
-                   Math.pow(that.mouse.pointerCache[1].clientY - that.mouse.pointerCache[0].clientY, 2);
+          Math.pow(that.mouse.pointerCache[1].clientY - that.mouse.pointerCache[0].clientY, 2);
 
         if (that.mouse.pinchDiff > 0) {
           if (diff > that.mouse.pinchDiff) {
@@ -615,8 +615,8 @@ class ControlsBase {
         });
       } else if (
         that.mouse.previousPosition.x !== null && (that.mouse.state.left ||
-        that.mouse.state.middle ||
-        that.mouse.state.right)
+          that.mouse.state.middle ||
+          that.mouse.state.right)
       ) {
         that.mouse.delta.x = pointerLoc[0] - that.mouse.previousPosition.x;
         that.mouse.delta.y = pointerLoc[1] - that.mouse.previousPosition.y;
@@ -646,10 +646,10 @@ class ControlsBase {
       let rect = that.canvas.getBoundingClientRect();
       let s = that.renderer.devicePixelRatio;
       that.mouse.normalizedPosition.x =
-        ((e.clientX - rect.left * s) / that.canvas.width) * s * 2 - 1;
+        ((e.clientX - rect.left) / that.canvas.width) * s * 2 - 1;
       that.mouse.normalizedPosition.y =
-        -(((e.clientY - rect.top * s) / that.canvas.height) * s) * 2 + 1;
-        
+        -(((e.clientY - rect.top) / that.canvas.height) * s) * 2 + 1;
+
       that.raiseEvent("mousemove", {
         e: that
       });
@@ -662,7 +662,7 @@ class ControlsBase {
     if (navigator.userAgent.toLowerCase().indexOf("firefox") > -1)
       wheelevent = "DOMMouseScroll";
 
-    this.canvas.addEventListener(wheelevent, function(e) {
+    this.canvas.addEventListener(wheelevent, function (e) {
       if (that.isInIframe() && !e.ctrlKey) {
         return;
       }
@@ -675,7 +675,7 @@ class ControlsBase {
       });
     });
 
-    this.canvas.addEventListener("keydown", function(e) {
+    this.canvas.addEventListener("keydown", function (e) {
       if (e.which == 16) {
         that.keyboard.shift = true;
       } else if (e.which == 17) {
@@ -689,7 +689,7 @@ class ControlsBase {
       });
     });
 
-    this.canvas.addEventListener("keyup", function(e) {
+    this.canvas.addEventListener("keyup", function (e) {
       if (e.which == 16) {
         that.keyboard.shift = false;
       } else if (e.which == 17) {
@@ -703,7 +703,7 @@ class ControlsBase {
       });
     });
 
-    this.canvas.addEventListener("pointerdown", function(e) {
+    this.canvas.addEventListener("pointerdown", function (e) {
       let btn = e.button;
       let source = "left";
       that.mouse.pointerCache.push(e);
@@ -728,19 +728,19 @@ class ControlsBase {
       });
     });
 
-    this.canvas.addEventListener("click", function(e) {
+    this.canvas.addEventListener("click", function (e) {
       let btn = e.button;
       let source = "left";
-      
+
       if (!that.mouse.moved) {
         that.raiseEvent("click", {
           e: that,
           source: source
         });
-      }      
+      }
     });
 
-    this.canvas.addEventListener("dblclick", function(e) {
+    this.canvas.addEventListener("dblclick", function (e) {
       let btn = e.button;
       let source = "left";
 
@@ -751,7 +751,7 @@ class ControlsBase {
     });
 
     // This function is added to multiple pointer events
-    let pointerUpEvent = function(e) {
+    let pointerUpEvent = function (e) {
       let btn = e.button;
       let source = "left";
       that.removeEvent(e);
@@ -783,15 +783,15 @@ class ControlsBase {
       });
     };
 
-    this.canvas.addEventListener("pointerup", function(e) {
+    this.canvas.addEventListener("pointerup", function (e) {
       pointerUpEvent(e);
     });
 
-    this.canvas.addEventListener("pointercancel", function(e) {
+    this.canvas.addEventListener("pointercancel", function (e) {
       pointerUpEvent(e);
     });
 
-    this.canvas.addEventListener("pointerleave", function(e) {
+    this.canvas.addEventListener("pointerleave", function (e) {
       pointerUpEvent(e);
     });
   }
@@ -11968,6 +11968,7 @@ class Faerun {
         } else {
             this.canvas = document.getElementById(this.canvasId);
         }
+        this.canvasContainer = this.canvas.parentElement;
         this.body = document.getElementsByTagName('body')[0];
         this.selectedItems = [];
         this.selectedIndicators = [];
@@ -12647,7 +12648,7 @@ class Faerun {
                 Faerun.createElement('div', { classes: 'crosshair-y' })
             ]
         );
-        this.body.appendChild(indicatorElement);
+        this.canvasContainer.appendChild(indicatorElement);
         this.selectedIndicators.push({
             element: indicatorElement,
             index: item.item.index,

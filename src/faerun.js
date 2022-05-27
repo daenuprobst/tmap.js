@@ -29,6 +29,7 @@ class Faerun {
         } else {
             this.canvas = document.getElementById(this.canvasId);
         }
+        this.canvasContainer = this.canvas.parentElement;
         this.body = document.getElementsByTagName('body')[0];
         this.selectedItems = [];
         this.selectedIndicators = [];
@@ -708,7 +709,7 @@ class Faerun {
                 Faerun.createElement('div', { classes: 'crosshair-y' })
             ]
         );
-        this.body.appendChild(indicatorElement);
+        this.canvasContainer.appendChild(indicatorElement);
         this.selectedIndicators.push({
             element: indicatorElement,
             index: item.item.index,

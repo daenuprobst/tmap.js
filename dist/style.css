@@ -1,4 +1,5 @@
-html,body {
+html,
+body {
     margin: 0;
     padding: 0;
 }
@@ -11,11 +12,11 @@ html,body {
 }
 
 #tmapCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    /* position: absolute;
+    top: 100px;
+    left: 100px; */
+    width: 400px;
+    height: 400px;
 }
 
 #hover-indicator {
@@ -40,7 +41,10 @@ html,body {
 
 .selected-indicator .crosshair-x {
     position: absolute;
-    top: 0; left: 0; bottom: 0; right: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
     height: 2px;
     width: 100%;
     margin: auto;
@@ -49,7 +53,10 @@ html,body {
 
 .selected-indicator .crosshair-y {
     position: absolute;
-    top: 0; left: 0; bottom: 0; right: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
     width: 2px;
     height: 100%;
     margin: auto;
