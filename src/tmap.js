@@ -1,7 +1,5 @@
 const Faerun = require('./faerun.js');
 
-Faerun = require('./faerun.js');
-
 class TMAP {
     constructor(
         canvasId,

@@ -12779,6 +12779,7 @@ class Faerun {
         });
         return results;
     }
+
     static createColorBox(value) {
         return Faerun.createElement(
             'div',
@@ -12863,12 +12864,16 @@ class Faerun {
         if (m > other) return m;
         return other;
     }
+
+    static hexToRgb(hexValue) {
+        return Lore.Core.Color.fromHex(hexValue);
+    }
 }
 
 module.exports = Faerun
 
 },{"lore-engine":2}],66:[function(require,module,exports){
-Faerun = require('./faerun.js');
+const Faerun = require('./faerun.js');
 
 class TMAP {
     constructor(
@@ -13051,6 +13056,10 @@ class TMAP {
 
     watchZoom(callback) {
         this.faerun.watchZoom(callback);
+    }
+
+    static hexToRgb(hexValue) {
+        return Faerun.fromHex(hexValue);
     }
 }
 
