@@ -8,6 +8,7 @@ class TMAP {
         colors,
         labels = null,
         backgroundColor = "#222222",
+        view = "front",
         treeColor = "#4a69bd",
         maxPointSize = 20,
         pointScale = 5,
@@ -45,7 +46,7 @@ class TMAP {
             "point_scale": pointScale,
             "selected_labels": [null],
             "series_title": [null],
-            "shader": "smoothCircle",
+            "shader": view === 'free' ? "sphere" : "smoothCircle",
             "title_index": [1]
         }];
 
@@ -88,7 +89,7 @@ class TMAP {
 
         this.faerun = new Faerun(
             canvasId, this.scatterMeta, this.treeMeta,
-            data, backgroundColor, hasLegend
+            data, backgroundColor, view, hasLegend
         );
     }
 

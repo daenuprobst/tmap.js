@@ -44,7 +44,9 @@ tmap = new TMAP(
     vertexCoordinates,
     edgeCoordinates,
     colors,
-    null
+    null,
+    '#222222',
+    'front',
 );
 
 tmap.setVertexColor(719, [255, 0, 0])

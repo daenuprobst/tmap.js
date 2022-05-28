@@ -11946,6 +11946,7 @@ class Faerun {
         treeMeta = [],
         data = [],
         clearColorHex = "#222222",
+        view = "front",
         hasLegend = true,
         antiAliasing = true,
         alphaBlending = false,
@@ -11982,7 +11983,7 @@ class Faerun {
         this.lore = null;
         this.clearColorHex = clearColorHex;
         this.clearColor = null;
-        this.view = 'front';
+        this.view = view;
         this.antiAliasing = antiAliasing;
         this.alphaBlending = alphaBlending;
         this.thumbnailWidth = thumbnailWidth;
@@ -12877,6 +12878,7 @@ class TMAP {
         colors,
         labels = null,
         backgroundColor = "#222222",
+        view = "front",
         treeColor = "#4a69bd",
         maxPointSize = 20,
         pointScale = 5,
@@ -12914,7 +12916,7 @@ class TMAP {
             "point_scale": pointScale,
             "selected_labels": [null],
             "series_title": [null],
-            "shader": "smoothCircle",
+            "shader": view === 'free' ? "sphere" : "smoothCircle",
             "title_index": [1]
         }];
 
@@ -12957,7 +12959,7 @@ class TMAP {
 
         this.faerun = new Faerun(
             canvasId, this.scatterMeta, this.treeMeta,
-            data, backgroundColor, hasLegend
+            data, backgroundColor, view, hasLegend
         );
     }
 

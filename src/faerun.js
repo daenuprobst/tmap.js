@@ -7,6 +7,7 @@ class Faerun {
         treeMeta = [],
         data = [],
         clearColorHex = "#222222",
+        view = "front",
         hasLegend = true,
         antiAliasing = true,
         alphaBlending = false,
@@ -43,7 +44,7 @@ class Faerun {
         this.lore = null;
         this.clearColorHex = clearColorHex;
         this.clearColor = null;
-        this.view = 'front';
+        this.view = view;
         this.antiAliasing = antiAliasing;
         this.alphaBlending = alphaBlending;
         this.thumbnailWidth = thumbnailWidth;
