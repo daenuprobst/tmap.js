@@ -840,9 +840,7 @@ class Faerun {
         });
         return results;
     }
-    hexToRgb(hexValue) {
-        return Lore.Core.Color.fromHex(hexValue);
-    }
+
     static createColorBox(value) {
         return Faerun.createElement(
             'div',
@@ -926,6 +924,10 @@ class Faerun {
 
         if (m > other) return m;
         return other;
+    }
+
+    static hexToRgb(hexValue) {
+        return Lore.Core.Color.fromHex(hexValue);
     }
 }
 

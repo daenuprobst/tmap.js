@@ -1,3 +1,5 @@
+const Faerun = require('./faerun.js');
+
 Faerun = require('./faerun.js');
 
 class TMAP {
@@ -181,6 +183,10 @@ class TMAP {
 
     watchZoom(callback) {
         this.faerun.watchZoom(callback);
+    }
+
+    static hexToRgb(hexValue) {
+        return Faerun.fromHex(hexValue);
     }
 }
 
